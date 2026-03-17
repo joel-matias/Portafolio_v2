@@ -7,22 +7,22 @@ interface IntroAnimationProps {
 }
 
 // ─── Physics constants ───────────────────────────────────────
-const GRAVITY      = 1.4;   // px / frame²  — acceleration
-const RESTITUTION  = 0.62;  // energy retained after each bounce (0–1)
-const BALL_D       = 28;    // ball diameter in px
-const MAX_BOUNCES  = 5;     // bounces before expanding
-const MIN_VELOCITY = 2.8;   // below this vy the ball "settles" and expands
+const GRAVITY = 0.5;   // px / frame²  — acceleration
+const RESTITUTION = 0.72;  // energy retained after each bounce (0–1)
+const BALL_D = 40;    // ball diameter in px
+const MAX_BOUNCES = 3;     // bounces before expanding
+const MIN_VELOCITY = 2.5;   // below this vy the ball "settles" and expands
 
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
-  const ballRef    = useRef<HTMLDivElement>(null);
-  const shadowRef  = useRef<HTMLDivElement>(null);
+  const ballRef = useRef<HTMLDivElement>(null);
+  const shadowRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const [fading, setFading]     = useState(false);
+  const [fading, setFading] = useState(false);
   const [showText, setShowText] = useState(false);
 
   useEffect(() => {
-    const ball    = ballRef.current;
-    const shadow  = shadowRef.current;
+    const ball = ballRef.current;
+    const shadow = shadowRef.current;
     const overlay = overlayRef.current;
     if (!ball || !shadow || !overlay) return;
 
@@ -33,14 +33,14 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
     // y = 0  →  ball center is at viewport center
     // y < 0  →  ball is above center
     // Ground is at y = 0 (center of screen) so the ball bounces at mid-screen
-    let y  = -(H * 0.48);  // start just above the visible viewport
+    let y = -(H * 0.48);  // start just above the visible viewport
     let vy = 0;
     let bounceCount = 0;
     let animId: number;
     let settled = false;
 
     // Pre-calculate expansion scale
-    const diagonal    = Math.sqrt(W * W + H * H);
+    const diagonal = Math.sqrt(W * W + H * H);
     const expandScale = Math.ceil((diagonal / BALL_D) * 2.4);
 
     // ─── Helpers ──────────────────────────────────────────────
@@ -55,10 +55,10 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       const dist = Math.abs(ballY);                    // distance from ground
       const maxDist = H * 0.48;
       const proximity = 1 - Math.min(dist / maxDist, 1); // 0 far → 1 at ground
-      const s  = 0.3 + proximity * 0.9;               // scale 0.3 … 1.2
+      const s = 0.3 + proximity * 0.9;               // scale 0.3 … 1.2
       const op = 0.05 + proximity * 0.25;              // opacity 0.05 … 0.30
       shadow.style.transform = `translate(-50%, 0) scaleX(${s})`;
-      shadow.style.opacity   = String(op);
+      shadow.style.opacity = String(op);
     };
 
     // ─── Expansion sequence ────────────────────────────────────
@@ -95,11 +95,11 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
       // Integrate velocity
       vy += GRAVITY;
-      y  += vy;
+      y += vy;
 
       // ── Bounce ────────────────────────────────────────────────
       if (y >= 0) {
-        y  = 0;
+        y = 0;
         const impactSpeed = Math.abs(vy);
         vy = -impactSpeed * RESTITUTION;
         bounceCount++;
@@ -108,8 +108,8 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
         // Decide squash intensity (proportional to impact speed)
         const squash = Math.min(0.38, impactSpeed * 0.007);
-        const sx     = 1 + squash * 1.6;
-        const sy     = 1 - squash;
+        const sx = 1 + squash * 1.6;
+        const sy = 1 - squash;
         setBall(y, sx, sy);
 
         // Should we expand?
@@ -130,7 +130,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }
 
       // ── In air: squash/stretch based on speed ─────────────────
-      const speed   = Math.abs(vy);
+      const speed = Math.abs(vy);
       const stretch = Math.min(0.28, speed * 0.0032);
       const falling = vy > 0;
 
@@ -195,7 +195,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           position: "absolute",
           top: "50%",
           left: "50%",
-          width:  `${BALL_D}px`,
+          width: `${BALL_D}px`,
           height: `${BALL_D}px`,
           borderRadius: "50%",
           background: "var(--lime, #c8ff00)",
