@@ -1,26 +1,394 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Design Tokens ─── */
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface-2: #181818;
+  --text: #f5f5f3;
+  --muted: rgba(245, 245, 243, 0.45);
+  --subtle: rgba(245, 245, 243, 0.2);
+
+  --lime: #c8ff00;
+  --lime-dim: rgba(200, 255, 0, 0.12);
+  --lime-border: rgba(200, 255, 0, 0.25);
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-2: rgba(255, 255, 255, 0.12);
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(200, 255, 0, 0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--lime); }
+
+/* ─── Selection ─── */
+::selection { background: rgba(200, 255, 0, 0.25); color: var(--text); }
+
+/* ─── Typography ─── */
+.font-display {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+}
+
+/* ─── Gradient text ─── */
+.text-lime { color: var(--lime); }
+
+/* ─── Noise overlay ─── */
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ─── Custom Cursor ─── */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--lime);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(200, 255, 0, 0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+}
+
+.cursor-ring.expanded {
+  width: 56px;
+  height: 56px;
+  border-color: var(--lime);
+}
+
+/* ─── Intro Animation (physics handled in JS — only overlay base styles here) ─── */
+
+/* ─── Section base ─── */
+.section {
+  padding: 8rem 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .section { padding: 5rem 0; }
+}
+
+/* ─── Responsive two-column grids ─── */
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .two-col-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+  }
+}
+
+/* ─── Form two cols (name + email) ─── */
+.form-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 540px) {
+  .form-two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ─── Navbar responsive ─── */
+.nav-desktop {
+  display: none;
+}
+.nav-hamburger {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .nav-desktop {
+    display: flex;
+  }
+  .nav-hamburger {
+    display: none !important;
+  }
+}
+
+/* ─── Hero flex: stack on mobile ─── */
+.hero-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .hero-layout {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+/* ─── Three.js scene: hidden on mobile ─── */
+.three-scene-wrapper {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .three-scene-wrapper {
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
+/* ─── Skills three-column panel grid ─── */
+.skills-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .skills-panel-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ─── Projects row: adjust on mobile ─── */
+@media (max-width: 640px) {
+  .project-row-grid {
+    grid-template-columns: 40px 1fr !important;
+    gap: 1rem !important;
+  }
+  .project-row-actions {
+    display: none !important;
+  }
+}
+
+/* ─── Stats row mobile ─── */
+.stats-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 400px) {
+  .stats-row {
+    gap: 1.2rem;
+  }
+}
+
+/* ─── About qualities on mobile ─── */
+@media (max-width: 640px) {
+  .quality-item {
+    padding-left: 0 !important;
+  }
+}
+
+/* ─── Tag ─── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-2);
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: var(--lime-dim);
+  border-color: var(--lime-border);
+  color: var(--lime);
+}
+
+/* ─── Section number label ─── */
+.section-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--lime);
+  font-family: var(--font-body, 'Inter', monospace);
+}
+
+/* ─── Marquee ─── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ─── Project card hover glow ─── */
+.project-card {
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.project-card:hover {
+  border-color: rgba(200, 255, 0, 0.2) !important;
+  box-shadow: 0 0 0 1px rgba(200, 255, 0, 0.1), 0 20px 60px rgba(0,0,0,0.5);
+  transform: translateY(-4px);
+}
+
+/* ─── Line through text ─── */
+.strikethrough-animate {
+  position: relative;
+  display: inline-block;
+}
+.strikethrough-animate::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--lime);
+  transition: width 0.4s ease;
+}
+.strikethrough-animate:hover::after {
+  width: 100%;
+}
+
+/* ─── Skill box ─── */
+.skill-item {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 0.2s ease;
+  cursor: default;
+  display: inline-block;
+}
+.skill-item:hover {
+  background: var(--lime-dim);
+  border-color: var(--lime-border);
+  color: var(--lime);
+}
+
+/* ─── Button base ─── */
+.btn-lime {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--lime);
+  color: #0a0a0a;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-lime:hover {
+  background: #d4ff26;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(200, 255, 0, 0.25);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-ghost:hover {
+  border-color: var(--lime-border);
+  color: var(--lime);
+  background: var(--lime-dim);
+}
+
+/* ─── Horizontal divider line with label ─── */
+.divider-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--subtle);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.divider-line::before, .divider-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
