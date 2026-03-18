@@ -7,7 +7,6 @@
   --font-heading: var(--font-heading);
 }
 
-/* ─── Design Tokens ─── */
 :root {
   --bg: #0a0a0a;
   --surface: #111111;
@@ -24,7 +23,6 @@
   --border-2: rgba(255, 255, 255, 0.12);
 }
 
-/* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
@@ -45,24 +43,19 @@ body {
   body { cursor: auto; }
 }
 
-/* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: rgba(200, 255, 0, 0.3); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--lime); }
 
-/* ─── Selection ─── */
 ::selection { background: rgba(200, 255, 0, 0.25); color: var(--text); }
 
-/* ─── Typography ─── */
 .font-display {
   font-family: var(--font-heading, 'Syne', sans-serif);
 }
 
-/* ─── Gradient text ─── */
 .text-lime { color: var(--lime); }
 
-/* ─── Noise overlay ─── */
 .noise::after {
   content: '';
   position: fixed;
@@ -74,7 +67,6 @@ body {
   background-size: 200px;
 }
 
-/* ─── Custom Cursor ─── */
 .cursor-dot {
   width: 6px;
   height: 6px;
@@ -106,9 +98,6 @@ body {
   border-color: var(--lime);
 }
 
-/* ─── Intro Animation (physics handled in JS — only overlay base styles here) ─── */
-
-/* ─── Section base ─── */
 .section {
   padding: 8rem 0;
   position: relative;
@@ -118,7 +107,6 @@ body {
   .section { padding: 5rem 0; }
 }
 
-/* ─── Responsive two-column grids ─── */
 .two-col-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -132,7 +120,6 @@ body {
   }
 }
 
-/* ─── Form two cols (name + email) ─── */
 .form-two-col {
   display: grid;
   grid-template-columns: 1fr;
@@ -145,7 +132,6 @@ body {
   }
 }
 
-/* ─── Navbar responsive ─── */
 .nav-desktop {
   display: none;
 }
@@ -162,7 +148,6 @@ body {
   }
 }
 
-/* ─── Hero flex: stack on mobile ─── */
 .hero-layout {
   display: flex;
   flex-direction: column;
@@ -179,7 +164,6 @@ body {
   }
 }
 
-/* ─── Three.js scene: hidden on mobile ─── */
 .three-scene-wrapper {
   display: none;
 }
@@ -191,7 +175,6 @@ body {
   }
 }
 
-/* ─── Skills three-column panel grid ─── */
 .skills-panel-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -208,7 +191,6 @@ body {
   }
 }
 
-/* ─── Projects row: adjust on mobile ─── */
 @media (max-width: 640px) {
   .project-row-grid {
     grid-template-columns: 40px 1fr !important;
@@ -219,7 +201,6 @@ body {
   }
 }
 
-/* ─── Stats row mobile ─── */
 .stats-row {
   display: flex;
   gap: 2rem;
@@ -232,14 +213,12 @@ body {
   }
 }
 
-/* ─── About qualities on mobile ─── */
 @media (max-width: 640px) {
   .quality-item {
     padding-left: 0 !important;
   }
 }
 
-/* ─── Tag ─── */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -260,7 +239,6 @@ body {
   color: var(--lime);
 }
 
-/* ─── Section number label ─── */
 .section-num {
   font-size: 11px;
   font-weight: 600;
@@ -270,7 +248,6 @@ body {
   font-family: var(--font-body, 'Inter', monospace);
 }
 
-/* ─── Marquee ─── */
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -283,7 +260,6 @@ body {
 }
 .marquee-track:hover { animation-play-state: paused; }
 
-/* ─── Project card hover glow ─── */
 .project-card {
   transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -293,7 +269,6 @@ body {
   transform: translateY(-4px);
 }
 
-/* ─── Line through text ─── */
 .strikethrough-animate {
   position: relative;
   display: inline-block;
@@ -312,7 +287,6 @@ body {
   width: 100%;
 }
 
-/* ─── Skill box ─── */
 .skill-item {
   padding: 8px 14px;
   border-radius: 6px;
@@ -331,7 +305,6 @@ body {
   color: var(--lime);
 }
 
-/* ─── Button base ─── */
 .btn-lime {
   display: inline-flex;
   align-items: center;
@@ -376,7 +349,6 @@ body {
   background: var(--lime-dim);
 }
 
-/* ─── Horizontal divider line with label ─── */
 .divider-line {
   display: flex;
   align-items: center;

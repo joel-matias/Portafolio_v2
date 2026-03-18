@@ -38,7 +38,6 @@ export function About() {
     <section id="about" className="section" style={{ padding: "8rem clamp(1.5rem, 5vw, 3rem)" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
 
-        {/* Section header */}
         <AnimatedSection style={{ marginBottom: "5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <span className="section-num">01</span>
@@ -59,9 +58,7 @@ export function About() {
           </h2>
         </AnimatedSection>
 
-        {/* Main grid */}
         <div className="two-col-grid" style={{ alignItems: "start" }}>
-          {/* Left: bio + stats */}
           <AnimatedSection>
             <p
               style={{
@@ -90,7 +87,6 @@ export function About() {
               frontend, siempre buscando la solución más simple y efectiva para cada problema.
             </p>
 
-            {/* Stats row */}
             <div className="stats-row">
               {siteData.stats.map((stat) => (
                 <div key={stat.label}>
@@ -124,7 +120,6 @@ export function About() {
             </div>
           </AnimatedSection>
 
-          {/* Right: qualities */}
           <StaggerContainer>
             {qualities.map((q, i) => (
               <StaggerItem key={q.label}>

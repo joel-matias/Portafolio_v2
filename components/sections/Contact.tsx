@@ -31,15 +31,41 @@ const socials = [
 export function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
+
     setStatus("loading");
-    await new Promise((r) => setTimeout(r, 1500));
-    setStatus("success");
-    setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setStatus("idle"), 5000);
+    setErrorMessage("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = (await res.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+
+      if (!res.ok) {
+        setStatus("idle");
+        setErrorMessage(data?.error ?? "No se pudo enviar el mensaje.");
+        return;
+      }
+
+      setStatus("success");
+      setForm({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch {
+      setStatus("idle");
+      setErrorMessage("No se pudo enviar el mensaje. Intenta de nuevo.");
+    }
   };
 
   return (
@@ -64,7 +90,6 @@ export function Contact() {
       />
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        {/* Header */}
         <AnimatedSection style={{ marginBottom: "5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <span className="section-num">04</span>
@@ -87,7 +112,6 @@ export function Contact() {
         </AnimatedSection>
 
         <div className="two-col-grid" style={{ alignItems: "start" }}>
-          {/* Form */}
           <AnimatedSection>
             <AnimatePresence mode="wait">
               {status === "success" ? (
@@ -245,12 +269,23 @@ export function Contact() {
                       </>
                     )}
                   </button>
+
+                  {errorMessage && (
+                    <p
+                      style={{
+                        color: "#f87171",
+                        fontSize: "13px",
+                        fontFamily: "var(--font-body, Inter, sans-serif)",
+                      }}
+                    >
+                      {errorMessage}
+                    </p>
+                  )}
                 </motion.form>
               )}
             </AnimatePresence>
           </AnimatedSection>
 
-          {/* Contact info */}
           <AnimatedSection delay={0.15} style={{ paddingTop: "0.5rem" }}>
             <p
               style={{
@@ -265,7 +300,6 @@ export function Contact() {
               Estoy disponible para freelance, colaboraciones y oportunidades laborales.
             </p>
 
-            {/* Socials list */}
             <div style={{ display: "flex", flexDirection: "column", gap: "1px", marginBottom: "2.5rem" }}>
               {socials.map((s) => (
                 <a
@@ -321,7 +355,6 @@ export function Contact() {
               ))}
             </div>
 
-            {/* Availability */}
             <div
               style={{
                 display: "inline-flex",

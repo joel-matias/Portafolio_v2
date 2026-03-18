@@ -40,7 +40,6 @@ export function Hero() {
         overflow: "hidden",
       }}
     >
-      {/* Subtle radial glow behind text */}
       <div
         aria-hidden="true"
         style={{
@@ -59,9 +58,7 @@ export function Hero() {
         className="hero-layout"
         style={{ width: "100%", maxWidth: "1280px", margin: "0 auto" }}
       >
-        {/* Left: Content */}
         <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-          {/* Availability badge */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,7 +92,6 @@ export function Hero() {
             </span>
           </motion.div>
 
-          {/* Name — huge and bold */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,7 +122,6 @@ export function Hero() {
             </h1>
           </motion.div>
 
-          {/* Divider */}
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
@@ -139,7 +134,6 @@ export function Hero() {
             }}
           />
 
-          {/* Role + bio */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -183,7 +177,6 @@ export function Hero() {
             </p>
           </motion.div>
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -205,7 +198,6 @@ export function Hero() {
             </button>
           </motion.div>
 
-          {/* Social + scroll */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -242,7 +234,6 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right: Three.js sphere — CSS class hides on mobile */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -253,7 +244,6 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

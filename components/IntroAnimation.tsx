@@ -6,12 +6,11 @@ interface IntroAnimationProps {
   onComplete: () => void;
 }
 
-// ─── Physics constants ───────────────────────────────────────
-const GRAVITY = 0.5;   // px / frame²  — acceleration
-const RESTITUTION = 0.72;  // energy retained after each bounce (0–1)
-const BALL_D = 40;    // ball diameter in px
-const MAX_BOUNCES = 3;     // bounces before expanding
-const MIN_VELOCITY = 2.5;   // below this vy the ball "settles" and expands
+const GRAVITY = 0.5;
+const RESTITUTION = 0.72;
+const BALL_D = 40;
+const MAX_BOUNCES = 3;
+const MIN_VELOCITY = 2.5;
 
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const ballRef = useRef<HTMLDivElement>(null);
@@ -28,48 +27,38 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
     const W = window.innerWidth;
     const H = window.innerHeight;
-    const isMobile = W < 768;
 
-    // y = 0  →  ball center is at viewport center
-    // y < 0  →  ball is above center
-    // Ground is at y = 0 (center of screen) so the ball bounces at mid-screen
-    let y = -(H * 0.48);  // start just above the visible viewport
+    // The ground plane is the vertical center of the viewport.
+    let y = -(H * 0.48);
     let vy = 0;
     let bounceCount = 0;
     let animId: number;
     let settled = false;
 
-    // Pre-calculate expansion scale
     const diagonal = Math.sqrt(W * W + H * H);
     const expandScale = Math.ceil((diagonal / BALL_D) * 2.4);
 
-    // ─── Helpers ──────────────────────────────────────────────
-    /** Set ball transform (centered at top:50% left:50%) */
     const setBall = (translateY: number, sx: number, sy: number) => {
       ball.style.transform =
         `translate(-50%, -50%) translateY(${translateY}px) scaleX(${sx}) scaleY(${sy})`;
     };
 
-    /** Shadow: grows as ball nears the ground (y → 0) */
     const updateShadow = (ballY: number) => {
-      const dist = Math.abs(ballY);                    // distance from ground
+      const dist = Math.abs(ballY);
       const maxDist = H * 0.48;
-      const proximity = 1 - Math.min(dist / maxDist, 1); // 0 far → 1 at ground
-      const s = 0.3 + proximity * 0.9;               // scale 0.3 … 1.2
-      const op = 0.05 + proximity * 0.25;              // opacity 0.05 … 0.30
+      const proximity = 1 - Math.min(dist / maxDist, 1);
+      const s = 0.3 + proximity * 0.9;
+      const op = 0.05 + proximity * 0.25;
       shadow.style.transform = `translate(-50%, 0) scaleX(${s})`;
       shadow.style.opacity = String(op);
     };
 
-    // ─── Expansion sequence ────────────────────────────────────
     const triggerExpand = () => {
       settled = true;
       cancelAnimationFrame(animId);
 
-      // Hide shadow
       shadow.style.opacity = "0";
 
-      // Final squash → then expand
       setBall(0, 1.7, 0.45);
 
       setTimeout(() => {
@@ -78,10 +67,8 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         ball.style.borderRadius = "0";
         setBall(0, expandScale, expandScale);
 
-        // Flash the JMS text inside the lime fill
         setTimeout(() => setShowText(true), 60);
 
-        // Fade out overlay
         setTimeout(() => {
           setFading(true);
           setTimeout(onComplete, 480);
@@ -89,55 +76,48 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }, 90);
     };
 
-    // ─── Main physics loop ─────────────────────────────────────
     const tick = () => {
       if (settled) return;
 
-      // Integrate velocity
       vy += GRAVITY;
       y += vy;
 
-      // ── Bounce ────────────────────────────────────────────────
       if (y >= 0) {
         y = 0;
         const impactSpeed = Math.abs(vy);
         vy = -impactSpeed * RESTITUTION;
         bounceCount++;
 
-        updateShadow(y); // shadow at max
+        updateShadow(y);
 
-        // Decide squash intensity (proportional to impact speed)
         const squash = Math.min(0.38, impactSpeed * 0.007);
         const sx = 1 + squash * 1.6;
         const sy = 1 - squash;
         setBall(y, sx, sy);
 
-        // Should we expand?
         if (bounceCount >= MAX_BOUNCES || Math.abs(vy) < MIN_VELOCITY) {
           triggerExpand();
           return;
         }
 
-        // Squash → stretch → normal, then resume RAF
+        // Pause the loop while the impact squash/stretch sequence finishes.
         setTimeout(() => {
-          setBall(y, 0.86, 1.28);          // stretch going up
+          setBall(y, 0.86, 1.28);
           setTimeout(() => {
-            setBall(y, 1, 1);              // back to round
+            setBall(y, 1, 1);
             animId = requestAnimationFrame(tick);
           }, 70);
         }, 55);
-        return; // pause RAF during squash recovery
+        return;
       }
 
-      // ── In air: squash/stretch based on speed ─────────────────
       const speed = Math.abs(vy);
       const stretch = Math.min(0.28, speed * 0.0032);
       const falling = vy > 0;
 
-      // Stretch along travel direction, compress perpendicular
       const sy = falling
-        ? 1 + stretch          // elongate downward when falling
-        : 1 + stretch * 0.55;  // slight elongation upward when rising
+        ? 1 + stretch
+        : 1 + stretch * 0.55;
       const sx = 1 - stretch * 0.38;
 
       setBall(y, sx, sy);
@@ -146,7 +126,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       animId = requestAnimationFrame(tick);
     };
 
-    // Kick off
     animId = requestAnimationFrame(tick);
 
     return () => {
@@ -169,7 +148,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         pointerEvents: fading ? "none" : "all",
       }}
     >
-      {/* Ground shadow — ellipse that grows as ball approaches */}
       <div
         ref={shadowRef}
         style={{
@@ -188,7 +166,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         }}
       />
 
-      {/* The ball */}
       <div
         ref={ballRef}
         style={{
@@ -206,7 +183,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         }}
       />
 
-      {/* JMS flash — visible briefly as lime fills the screen */}
       {showText && (
         <div
           style={{

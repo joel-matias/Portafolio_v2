@@ -43,7 +43,6 @@ function ProjectRow({
         paddingRight: hovered ? "0.75rem" : "0",
       }}
     >
-      {/* Number */}
       <span
         style={{
           fontFamily: "var(--font-body, Inter, monospace)",
@@ -57,7 +56,6 @@ function ProjectRow({
         {String(index + 1).padStart(2, "0")}
       </span>
 
-      {/* Content */}
       <div>
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
           <h3
@@ -105,7 +103,6 @@ function ProjectRow({
         </p>
       </div>
 
-      {/* Actions — hidden on mobile via CSS */}
       <div
         className="project-row-actions"
         style={{
@@ -194,7 +191,6 @@ export function Projects() {
         position: "relative",
       }}
     >
-      {/* Subtle top border with lime */}
       <div
         style={{
           position: "absolute",
@@ -208,7 +204,6 @@ export function Projects() {
       />
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        {/* Header */}
         <AnimatedSection style={{ marginBottom: "4rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1.5rem" }}>
             <div>
@@ -244,7 +239,6 @@ export function Projects() {
           </div>
         </AnimatedSection>
 
-        {/* Projects list */}
         <StaggerContainer>
           <div style={{ borderTop: "1px solid var(--border)" }}>
             {siteData.projects.map((project, i) => (

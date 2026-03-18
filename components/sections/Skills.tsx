@@ -34,7 +34,6 @@ export function Skills() {
       style={{ padding: "8rem clamp(1.5rem, 5vw, 3rem)" }}
     >
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        {/* Header */}
         <AnimatedSection style={{ marginBottom: "5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <span className="section-num">03</span>
@@ -55,7 +54,6 @@ export function Skills() {
           </h2>
         </AnimatedSection>
 
-        {/* Marquee tech strip */}
         <AnimatedSection style={{ marginBottom: "5rem", overflow: "hidden" }}>
           <div
             style={{
@@ -66,7 +64,6 @@ export function Skills() {
               position: "relative",
             }}
           >
-            {/* Left fade */}
             <div
               style={{
                 position: "absolute",
@@ -79,7 +76,6 @@ export function Skills() {
                 pointerEvents: "none",
               }}
             />
-            {/* Right fade */}
             <div
               style={{
                 position: "absolute",
@@ -115,7 +111,6 @@ export function Skills() {
           </div>
         </AnimatedSection>
 
-        {/* Three columns */}
         <div className="skills-panel-grid">
           {(
             Object.entries(siteData.skills) as [
@@ -133,7 +128,6 @@ export function Skills() {
                   position: "relative",
                 }}
               >
-                {/* Corner accent */}
                 <div
                   style={{
                     position: "absolute",

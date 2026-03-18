@@ -15,7 +15,6 @@ export function ThreeScene() {
 
     let animId: number;
 
-    // Lazy-load Three.js
     import("three").then((THREE) => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
@@ -31,14 +30,13 @@ export function ThreeScene() {
       renderer.setClearColor(0x000000, 0);
       el.appendChild(renderer.domElement);
 
-      // Particle sphere
       const geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const basePositions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
 
       for (let i = 0; i < particleCount; i++) {
-        // Fibonacci sphere distribution for uniform coverage
+        // Fibonacci sphere placement keeps particles evenly distributed.
         const phi = Math.acos(1 - (2 * (i + 0.5)) / particleCount);
         const theta = Math.PI * (1 + Math.sqrt(5)) * i;
         const noise = (Math.random() - 0.5) * 0.25;
@@ -55,11 +53,10 @@ export function ThreeScene() {
         basePositions[i * 3 + 1] = y;
         basePositions[i * 3 + 2] = z;
 
-        // Color: mix between lime (#c8ff00) and white
         const t = Math.random();
-        colors[i * 3] = 0.78 + t * 0.22;      // R
-        colors[i * 3 + 1] = 1.0;               // G
-        colors[i * 3 + 2] = t * 0.05;          // B
+        colors[i * 3] = 0.78 + t * 0.22;
+        colors[i * 3 + 1] = 1.0;
+        colors[i * 3 + 2] = t * 0.05;
       }
 
       geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -76,7 +73,6 @@ export function ThreeScene() {
       const sphere = new THREE.Points(geometry, material);
       scene.add(sphere);
 
-      // Mouse tracking
       let targetRotX = 0;
       let targetRotY = 0;
       let currentRotX = 0;
@@ -99,14 +95,12 @@ export function ThreeScene() {
         animId = requestAnimationFrame(animate);
         time += 0.008;
 
-        // Lerp rotation to mouse
         currentRotX += (targetRotX - currentRotX) * 0.05;
         currentRotY += (targetRotY - currentRotY) * 0.05;
 
         sphere.rotation.x = currentRotX + time * 0.15;
         sphere.rotation.y = currentRotY + time * 0.2;
 
-        // Breathing pulse
         const pulse = 1 + Math.sin(time * 0.8) * 0.02;
         sphere.scale.setScalar(pulse);
 
@@ -115,7 +109,6 @@ export function ThreeScene() {
 
       animate();
 
-      // Cleanup
       const cleanup = () => {
         cancelAnimationFrame(animId);
         if (!isMobile) {
@@ -129,7 +122,6 @@ export function ThreeScene() {
         }
       };
 
-      // Store cleanup on element for unmount
       (el as HTMLDivElement & { _cleanup?: () => void })._cleanup = cleanup;
     });
 

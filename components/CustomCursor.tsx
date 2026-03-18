@@ -7,7 +7,6 @@ export function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only on pointer-fine devices (not touch)
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     let ringX = 0;
@@ -40,7 +39,6 @@ export function CustomCursor() {
     animate();
     window.addEventListener("mousemove", onMove, { passive: true });
 
-    // Expand on hoverable elements
     const expand = () => ringRef.current?.classList.add("expanded");
     const shrink = () => ringRef.current?.classList.remove("expanded");
     document.querySelectorAll("a, button, [data-cursor-expand]").forEach((el) => {
@@ -48,7 +46,7 @@ export function CustomCursor() {
       el.addEventListener("mouseleave", shrink);
     });
 
-    // MutationObserver to catch dynamically added elements
+    // Re-bind hover listeners when interactive elements are added later.
     const observer = new MutationObserver(() => {
       document.querySelectorAll("a, button, [data-cursor-expand]").forEach((el) => {
         el.removeEventListener("mouseenter", expand);

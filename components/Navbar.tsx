@@ -59,7 +59,6 @@ export function Navbar() {
           transition: "background 0.4s ease, border-color 0.4s ease",
         }}
       >
-        {/* Logo */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           style={{
@@ -76,7 +75,6 @@ export function Navbar() {
           JMS<span style={{ color: "var(--lime)" }}>.</span>
         </button>
 
-        {/* Desktop links — hidden on mobile via CSS class */}
         <div
           className="nav-desktop"
           style={{
@@ -142,7 +140,6 @@ export function Navbar() {
           </a>
         </div>
 
-        {/* Mobile hamburger — hidden on desktop via CSS class */}
         <button
           className="nav-hamburger"
           onClick={() => setMenuOpen((o) => !o)}
@@ -180,11 +177,9 @@ export function Navbar() {
         </button>
       </motion.nav>
 
-      {/* Mobile slide-in menu */}
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -200,7 +195,6 @@ export function Navbar() {
               }}
             />
 
-            {/* Panel */}
             <motion.div
               initial={{ opacity: 0, x: "100%" }}
               animate={{ opacity: 1, x: 0 }}
