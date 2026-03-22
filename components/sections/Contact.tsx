@@ -72,7 +72,7 @@ export function Contact() {
     <section
       id="contact"
       style={{
-        padding: "8rem clamp(1.5rem, 5vw, 3rem)",
+        padding: "clamp(3rem, 10vw, 8rem) clamp(1.5rem, 5vw, 3rem)",
         background: "var(--surface)",
         position: "relative",
       }}
@@ -99,7 +99,7 @@ export function Contact() {
             style={{
               fontFamily: "var(--font-heading, Syne, sans-serif)",
               fontWeight: 800,
-              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              fontSize: "clamp(2.2rem, 6vw, 5rem)",
               letterSpacing: "-0.04em",
               lineHeight: 0.95,
               color: "var(--text)",
@@ -342,13 +342,7 @@ export function Contact() {
                     {s.icon}
                     {s.label}
                   </span>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      fontFamily: "var(--font-body, Inter, monospace)",
-                      opacity: 0.7,
-                    }}
-                  >
+                  <span className="social-user-handle">
                     {s.user}
                   </span>
                 </a>

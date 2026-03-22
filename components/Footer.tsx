@@ -7,14 +7,10 @@ export function Footer() {
 
   return (
     <footer
+      className="footer-layout"
       style={{
         padding: "2.5rem clamp(1.5rem, 5vw, 3rem)",
         borderTop: "1px solid var(--border)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "1rem",
-        flexWrap: "wrap",
       }}
     >
       <button

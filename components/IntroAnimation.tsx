@@ -125,8 +125,8 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           return;
         }
 
-        const stretchOutY = 1 + squash * 1.1; // e.g. 1.33 on first bounce
-        const stretchOutX = 1 - squash * 0.5; // e.g. 0.84
+        const stretchOutY = 1 + squash * 1.1;
+        const stretchOutX = 1 - squash * 0.5;
 
         setTimeout(() => {
           setBall(y, stretchOutX, stretchOutY);

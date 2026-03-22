@@ -31,7 +31,7 @@ export function Skills() {
   return (
     <section
       id="skills"
-      style={{ padding: "8rem clamp(1.5rem, 5vw, 3rem)" }}
+      style={{ padding: "clamp(3rem, 10vw, 8rem) clamp(1.5rem, 5vw, 3rem)" }}
     >
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         <AnimatedSection style={{ marginBottom: "5rem" }}>
@@ -43,7 +43,7 @@ export function Skills() {
             style={{
               fontFamily: "var(--font-heading, Syne, sans-serif)",
               fontWeight: 800,
-              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              fontSize: "clamp(2.2rem, 6vw, 5rem)",
               letterSpacing: "-0.04em",
               lineHeight: 0.95,
               color: "var(--text)",
@@ -122,6 +122,7 @@ export function Skills() {
             return (
               <AnimatedSection
                 key={key}
+                className="skills-panel"
                 style={{
                   padding: "2.5rem",
                   background: "var(--surface)",

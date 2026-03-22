@@ -101,6 +101,33 @@ function ProjectRow({
         >
           {project.description}
         </p>
+
+        <div className="project-mobile-links">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost"
+              style={{ fontSize: "11px", padding: "7px 12px", gap: "5px" }}
+            >
+              <Github size={12} />
+              GitHub
+            </a>
+          )}
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-lime"
+              style={{ fontSize: "11px", padding: "7px 12px", gap: "5px" }}
+            >
+              <ArrowUpRight size={12} />
+              Ver demo
+            </a>
+          )}
+        </div>
       </div>
 
       <div
@@ -186,7 +213,7 @@ export function Projects() {
     <section
       id="projects"
       style={{
-        padding: "8rem clamp(1.5rem, 5vw, 3rem)",
+        padding: "clamp(3rem, 10vw, 8rem) clamp(1.5rem, 5vw, 3rem)",
         background: "var(--surface)",
         position: "relative",
       }}
@@ -215,7 +242,7 @@ export function Projects() {
                 style={{
                   fontFamily: "var(--font-heading, Syne, sans-serif)",
                   fontWeight: 800,
-                  fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                  fontSize: "clamp(2.2rem, 6vw, 5rem)",
                   letterSpacing: "-0.04em",
                   lineHeight: 0.95,
                   color: "var(--text)",

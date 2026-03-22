@@ -227,7 +227,16 @@ export function Hero() {
               LinkedIn
             </a>
             <span
-              style={{ color: "var(--subtle)", fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-body, Inter, sans-serif)" }}
+              style={{
+                color: "var(--subtle)",
+                fontSize: "clamp(10px, 2.8vw, 11px)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                fontFamily: "var(--font-body, Inter, sans-serif)",
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+                minWidth: 0,
+              }}
             >
               {personal.email}
             </span>

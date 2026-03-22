@@ -149,7 +149,7 @@ export function Navbar() {
             cursor: "none",
             flexDirection: "column",
             gap: "5px",
-            padding: "4px",
+            padding: "11px",
           }}
           aria-label="Menu"
         >
