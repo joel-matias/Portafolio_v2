@@ -6,11 +6,15 @@ interface IntroAnimationProps {
   onComplete: () => void;
 }
 
-const GRAVITY = 0.5;
-const RESTITUTION = 0.72;
+const GRAVITY = 0.4;
+const FALL_MULTIPLIER = 1;
+const RESTITUTION = 0.80;
 const BALL_D = 40;
 const MAX_BOUNCES = 3;
-const MIN_VELOCITY = 2.5;
+const MIN_VELOCITY = 1;
+
+const GLOW_NORMAL =
+  "0 0 20px rgba(200,255,0,0.7), 0 0 50px rgba(200,255,0,0.35)";
 
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const ballRef = useRef<HTMLDivElement>(null);
@@ -25,10 +29,9 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const overlay = overlayRef.current;
     if (!ball || !shadow || !overlay) return;
 
-    const W = window.innerWidth;
     const H = window.innerHeight;
+    const W = window.innerWidth;
 
-    // The ground plane is the vertical center of the viewport.
     let y = -(H * 0.48);
     let vy = 0;
     let bounceCount = 0;
@@ -49,8 +52,31 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       const proximity = 1 - Math.min(dist / maxDist, 1);
       const s = 0.3 + proximity * 0.9;
       const op = 0.05 + proximity * 0.25;
+      shadow.style.transition = "";
       shadow.style.transform = `translate(-50%, 0) scaleX(${s})`;
       shadow.style.opacity = String(op);
+    };
+
+    const triggerImpactEffects = (impactSpeed: number) => {
+      const intensity = Math.min(1, impactSpeed / 20);
+
+      ball.style.boxShadow = `
+        0 0 ${30 + intensity * 40}px rgba(220,255,80,${0.9 + intensity * 0.1}),
+        0 0 ${70 + intensity * 60}px rgba(200,255,0,${0.6 + intensity * 0.3}),
+        0 0 0 2px rgba(200,255,0,0.5)
+      `;
+      setTimeout(() => {
+        ball.style.boxShadow = GLOW_NORMAL;
+      }, 100);
+
+      shadow.style.transition = "transform 0.05s ease-out, opacity 0.05s ease-out";
+      shadow.style.transform = `translate(-50%, 0) scaleX(${1.6 + intensity * 0.6})`;
+      shadow.style.opacity = String(0.45 + intensity * 0.25);
+      setTimeout(() => {
+        shadow.style.transition = "";
+        shadow.style.transform = `translate(-50%, 0) scaleX(1.2)`;
+        shadow.style.opacity = "0.30";
+      }, 60);
     };
 
     const triggerExpand = () => {
@@ -58,7 +84,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       cancelAnimationFrame(animId);
 
       shadow.style.opacity = "0";
-
       setBall(0, 1.7, 0.45);
 
       setTimeout(() => {
@@ -68,7 +93,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         setBall(0, expandScale, expandScale);
 
         setTimeout(() => setShowText(true), 60);
-
         setTimeout(() => {
           setFading(true);
           setTimeout(onComplete, 480);
@@ -79,7 +103,8 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const tick = () => {
       if (settled) return;
 
-      vy += GRAVITY;
+      // Use softer lift and stronger fall so the bounce feels heavier.
+      vy += vy >= 0 ? GRAVITY * FALL_MULTIPLIER : GRAVITY;
       y += vy;
 
       if (y >= 0) {
@@ -88,21 +113,23 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
         vy = -impactSpeed * RESTITUTION;
         bounceCount++;
 
-        updateShadow(y);
-
-        const squash = Math.min(0.38, impactSpeed * 0.007);
+        const squash = Math.min(0.38, impactSpeed * 0.016);
         const sx = 1 + squash * 1.6;
         const sy = 1 - squash;
         setBall(y, sx, sy);
+        updateShadow(y);
+        triggerImpactEffects(impactSpeed);
 
         if (bounceCount >= MAX_BOUNCES || Math.abs(vy) < MIN_VELOCITY) {
           triggerExpand();
           return;
         }
 
-        // Pause the loop while the impact squash/stretch sequence finishes.
+        const stretchOutY = 1 + squash * 1.1; // e.g. 1.33 on first bounce
+        const stretchOutX = 1 - squash * 0.5; // e.g. 0.84
+
         setTimeout(() => {
-          setBall(y, 0.86, 1.28);
+          setBall(y, stretchOutX, stretchOutY);
           setTimeout(() => {
             setBall(y, 1, 1);
             animId = requestAnimationFrame(tick);
@@ -112,13 +139,19 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }
 
       const speed = Math.abs(vy);
-      const stretch = Math.min(0.28, speed * 0.0032);
+      const stretch = Math.min(0.28, speed * 0.008);
       const falling = vy > 0;
 
       const sy = falling
         ? 1 + stretch
         : 1 + stretch * 0.55;
-      const sx = 1 - stretch * 0.38;
+      const sx = 1 - stretch * 0.45;
+
+      const glowIntensity = Math.min(1, speed / 30);
+      ball.style.boxShadow = `
+        0 0 ${20 + glowIntensity * 18}px rgba(200,255,0,${0.7 + glowIntensity * 0.25}),
+        0 0 ${50 + glowIntensity * 28}px rgba(200,255,0,${0.35 + glowIntensity * 0.18})
+      `;
 
       setBall(y, sx, sy);
       updateShadow(y);
@@ -176,8 +209,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           height: `${BALL_D}px`,
           borderRadius: "50%",
           background: "var(--lime, #c8ff00)",
-          boxShadow:
-            "0 0 20px rgba(200,255,0,0.7), 0 0 50px rgba(200,255,0,0.35)",
+          boxShadow: GLOW_NORMAL,
           transformOrigin: "center center",
           willChange: "transform",
         }}
