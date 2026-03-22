@@ -79,12 +79,16 @@ export function ThreeScene() {
       let currentRotX = 0;
       let currentRotY = 0;
 
+      // Cache rect to avoid forced reflow on every mousemove
+      let cachedRect = el.getBoundingClientRect();
+      const onResize = () => { cachedRect = el.getBoundingClientRect(); };
+      window.addEventListener("resize", onResize, { passive: true });
+
       const onMouseMove = (e: MouseEvent) => {
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        targetRotY = ((e.clientX - cx) / (rect.width / 2)) * 0.5;
-        targetRotX = -((e.clientY - cy) / (rect.height / 2)) * 0.4;
+        const cx = cachedRect.left + cachedRect.width / 2;
+        const cy = cachedRect.top + cachedRect.height / 2;
+        targetRotY = ((e.clientX - cx) / (cachedRect.width / 2)) * 0.5;
+        targetRotX = -((e.clientY - cy) / (cachedRect.height / 2)) * 0.4;
       };
 
       window.addEventListener("mousemove", onMouseMove, { passive: true });
@@ -111,6 +115,7 @@ export function ThreeScene() {
       const cleanup = () => {
         cancelAnimationFrame(animId);
         window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("resize", onResize);
         renderer.dispose();
         geometry.dispose();
         material.dispose();

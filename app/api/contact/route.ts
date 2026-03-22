@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
 
     const to = process.env.CONTACT_TO_EMAIL || siteData.personal.email;
-    const from = process.env.CONTACT_FROM_EMAIL || "Portfolio <onboarding@resend.dev>";
+    const from = process.env.CONTACT_FROM_EMAIL;
 
     const resendResponse = await fetch(resendApiUrl, {
       method: "POST",
